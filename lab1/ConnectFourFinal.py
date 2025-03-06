@@ -1,11 +1,11 @@
 try:
     import numpy as np
 except ImportError:
-    print("Sorry, this example requires Numpy installed !")
+    print("Sorry, this example requires Numpy installed!")
     raise
 
 from easyAI import TwoPlayerGame
-
+from termcolor import colored
 
 class ClumsyConnectFour(TwoPlayerGame):
     """
@@ -20,6 +20,7 @@ class ClumsyConnectFour(TwoPlayerGame):
             else (np.array([[0 for i in range(7)] for j in range(6)]))
         )
         self.current_player = 1  # player 1 starts.
+        self.winning_positions = None  # Zapisz zwycięskie pola (jeśli są)
 
     def possible_moves(self):
         """Zwraca listę kolumn, do których można wrzucić żeton."""
@@ -28,36 +29,51 @@ class ClumsyConnectFour(TwoPlayerGame):
     def make_move(self, column):
         """Wrzucenie żetonu z mechanizmem 'rozjeżdżania'."""
         column = self.apply_probabilistic_shift(column)
-
         line = np.argmin(self.board[:, column] != 0)
         self.board[line, column] = self.current_player
 
     def apply_probabilistic_shift(self, column):
-        """
-        Z 10% szansą przesuwa żeton w lewo lub w prawo, jeśli to możliwe.
-        """
+        """Z 10% szansą przesuwa żeton w lewo lub w prawo, jeśli to możliwe."""
         roll = np.random.random()
-        if roll < 0.1 and column > 0:  # 10% szansy na przesunięcie w lewo
+        if roll < 0.1 and column > 0:
             return column - 1
-        elif roll < 0.2 and column < 6:  # 10% szansy na przesunięcie w prawo
+        elif roll < 0.2 and column < 6:
             return column + 1
-        return column  # 80% na pozostanie w tej samej kolumnie
+        return column
 
     def show(self):
-        print(
-            "\n"
-            + "\n".join(
-                ["0 1 2 3 4 5 6", 13 * "-"]
-                + [
-                    " ".join([[".", "O", "X"][self.board[5 - j][i]] for i in range(7)])
-                    for j in range(6)
-                ]
-            )
-        )
+        """
+        Wyświetla planszę, podświetlając zwycięskie żetony (jeśli istnieją).
+        """
+        self.winning_positions = find_four(self.board, self.opponent_index)
+
+        print("\n" + "\n".join(
+            ["0 1 2 3 4 5 6", 13 * "-"] +
+            [
+                " ".join([
+                    self.colored_token(5 - j, i)
+                    for i in range(7)
+                ])
+                for j in range(6)
+            ]
+        ))
+
+    def colored_token(self, row, col):
+        """
+        Zwraca żeton z kolorowaniem, jeśli jest częścią zwycięskiej czwórki.
+        """
+        token = self.board[row][col]
+        if token == 0:
+            return "."
+        elif (row, col) in (self.winning_positions or []):
+            return colored("O" if token == 1 else "X", "red")
+        else:
+            return "O" if token == 1 else "X"
 
     def lose(self):
         """Czy obecny gracz przegrał (czy przeciwnik wygrał)."""
-        return find_four(self.board, self.opponent_index)
+        self.winning_positions = find_four(self.board, self.opponent_index)
+        return self.winning_positions is not None
 
     def is_over(self):
         """Czy gra się zakończyła."""
@@ -68,21 +84,27 @@ class ClumsyConnectFour(TwoPlayerGame):
         return -100 if self.lose() else 0
 
 
-def find_four(board, current_player):
+def find_four(board, player):
     """
-    Sprawdza, czy obecny gracz ułożył 4 żetony w linii.
+    Znajduje linię 4 żetonów jednego gracza.
+    Zwraca listę współrzędnych [(row, col), ...] albo None jeśli brak wygranej.
     """
     for pos, direction in POS_DIR:
         streak = 0
-        while (0 <= pos[0] <= 5) and (0 <= pos[1] <= 6):
-            if board[pos[0], pos[1]] == current_player:
+        winning_positions = []
+
+        while 0 <= pos[0] <= 5 and 0 <= pos[1] <= 6:
+            if board[pos[0], pos[1]] == player:
                 streak += 1
+                winning_positions.append((pos[0], pos[1]))
                 if streak == 4:
-                    return True
+                    return winning_positions  
             else:
                 streak = 0
+                winning_positions = []
             pos = pos + direction
-    return False
+
+    return None
 
 
 POS_DIR = np.array(
@@ -99,7 +121,6 @@ if __name__ == "__main__":
 
     ai_algo_negamax = Negamax(3)
 
-    # Zmieniamy grę na ClumsyConnectFour
     game = ClumsyConnectFour([AI_Player(ai_algo_negamax), AI_Player(ai_algo_negamax)])
     game.play()
 
