@@ -1,9 +1,7 @@
 import numpy as np
 from easyAI import AI_Player, Negamax
-from termcolor import colored
 from ConnectFourFinal import ClumsyConnectFour
 
-# Zakładam, że klasa ClumsyConnectFour i funkcja find_four są zaimportowane z Twojego kodu.
 
 def run_games_with_probabilistic_clumsy(depth1, depth2, num_games=50):
     """

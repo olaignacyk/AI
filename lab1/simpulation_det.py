@@ -3,7 +3,6 @@ from easyAI import AI_Player, Negamax
 from termcolor import colored
 from program import ConnectFour
 
-# Zakładam, że klasa ClumsyConnectFour i funkcja find_four są zaimportowane z Twojego kodu.
 
 def run_games_with_probabilistic_clumsy(depth1, depth2, num_games=50):
     """
@@ -13,7 +12,6 @@ def run_games_with_probabilistic_clumsy(depth1, depth2, num_games=50):
     results = {1: 0, 2: 0, 'draw': 0}
 
     for game_number in range(num_games):
-        # Zmiana gracza rozpoczynającego co grę
         if game_number % 2 == 0:
             players = [AI_Player(Negamax(depth1)), AI_Player(Negamax(depth2))]
         else:
@@ -23,7 +21,7 @@ def run_games_with_probabilistic_clumsy(depth1, depth2, num_games=50):
         game.play()
 
         if game.lose():
-            winner = game.opponent_index  # Przegrywający to current_player, więc wygrywa opponent_index
+            winner = game.opponent_index  
             results[winner] += 1
         else:
             results['draw'] += 1
