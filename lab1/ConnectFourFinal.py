@@ -32,6 +32,9 @@ class ClumsyConnectFour(TwoPlayerGame):
         line = np.argmin(self.board[:, column] != 0)
         self.board[line, column] = self.current_player
 
+    def ttentry(self):
+        return str
+
     def apply_probabilistic_shift(self, column):
         """Z 10% szansą przesuwa żeton w lewo lub w prawo, jeśli to możliwe."""
         roll = np.random.random()

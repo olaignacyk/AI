@@ -49,6 +49,9 @@ class ConnectFour(TwoPlayerGame):
 
     def scoring(self):
         return -100 if self.lose() else 0
+    
+    def ttentry(self):
+        return str
 
 
 def find_four(board, current_player):
