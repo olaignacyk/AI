@@ -8,6 +8,14 @@ import pandas as pd
 
 
 def run_games_with_stats(depth,  use_alpha_beta=True, probabilistic=True, num_games=50):
+    """
+    Funkcja uruchamia symulacje gier Connect Four dla podanych parametrów i zbiera statystyki.
+    :param depth: Głębokość przeszukiwania drzewa decyzji
+    :param use_alpha_beta: Czy używać przycinania alfa-beta
+    :param probabilistic: Czy używać losowej wersji gry (ClumsyConnectFour)
+    :param num_games: Liczba gier do rozegrania
+    :return: Słownik zawierający statystyki gier
+    """
     results = {1: 0, 2: 0, 'draw': 0}
     start_time = time.time()
     for game_number in range(num_games):
@@ -46,15 +54,11 @@ if __name__ == "__main__":
     num_games = 5
 
     stats = []
-    
-    stats.append(run_games_with_stats(3, True, True, num_games))
-    stats.append(run_games_with_stats(5, True, True, num_games))
-    stats.append(run_games_with_stats(3, False, True, num_games))
-    stats.append(run_games_with_stats(5, False, True, num_games))
-    stats.append(run_games_with_stats(3, True, False, num_games))
-    stats.append(run_games_with_stats(5, True, False, num_games))
-    stats.append(run_games_with_stats(3, False, False, num_games))
-    stats.append(run_games_with_stats(5, False, False, num_games))    
+    for depth in [3,5]:
+        stats.append(run_games_with_stats(depth, True, True, num_games))
+        stats.append(run_games_with_stats(depth, False, True, num_games))
+        stats.append(run_games_with_stats(depth, True, False, num_games))
+        stats.append(run_games_with_stats(depth, False, False, num_games)) 
     
     df = pd.DataFrame(stats)
     print(df)
