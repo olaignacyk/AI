@@ -2,8 +2,9 @@ from strips_domain import STRIPS_domain
 from planning_problem import Planning_problem
 
 domain = STRIPS_domain()
-blocks = [chr(i) for i in range(65, 75)]  # A-J
+blocks = ['A', 'B', 'C', 'D', 'E', 'F']
 
+# Operatory
 for b in blocks:
     domain.add_operator({
         'name': f'pick_up({b})',
@@ -32,7 +33,12 @@ for b in blocks:
                 'delete': [f'on({b}, {c})', 'hand_empty', f'clear({b})']
             })
 
+# ✔️ Początkowy stan: wszystko luzem
 initial = [f'on_table({b})' for b in blocks] + ['hand_empty'] + [f'clear({b})' for b in blocks]
-goal = [f'on({blocks[i]}, {blocks[i+1]})' for i in range(len(blocks) - 1)]
+
+# 🎯 Cel: wieża A–B–C–D–E–F
+goal = [
+    'on(A, B)', 'on(B, C)', 'on(C, D)', 'on(D, E)', 'on(E, F)'
+]
 
 problem = Planning_problem(initial, goal, domain)

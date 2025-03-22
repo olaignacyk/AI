@@ -14,6 +14,7 @@ def forward_search(problem, timeout=300):
         state_key = frozenset(state)
 
         if problem.goal_test(state):
+            print(f"🔢 Eksplorowano {len(explored)} unikalnych stanów")  # <- dodaj to
             return plan, f"{time.time() - start_time:.2f}s"
 
         if state_key in explored:
@@ -24,5 +25,7 @@ def forward_search(problem, timeout=300):
             new_state = problem.domain.apply(state, op)
             new_plan = plan + [op['name']]
             frontier.append((new_state, new_plan))
+    print(f"🔢 Eksplorowano {len(explored)} unikalnych stanów")
+
 
     return None, "❌ No solution found"

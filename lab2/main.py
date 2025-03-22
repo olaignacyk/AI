@@ -3,7 +3,7 @@ from forward_planner import forward_search
 from astar_planner import astar_search
 from heuristics import num_unsatisfied_goals
 # 'problem1','problem2'
-problem_modules = [  'problem2']
+problem_modules = [ 'problem1','problem2','problem3']
 
 for idx, mod_name in enumerate(problem_modules, 1):
     print(f"\n=== 🔍 Problem {idx} ===")
