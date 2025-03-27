@@ -14,7 +14,7 @@ def forward_search(problem, timeout=300):
         state_key = frozenset(state)
 
         if problem.goal_test(state):
-            print(f"🔢 Eksplorowano {len(explored)} unikalnych stanów")  # <- dodaj to
+            print(f"🔢 Eksplorowano {len(explored)} unikalnych stanów")  
             return plan, f"{time.time() - start_time:.2f}s"
 
         if state_key in explored:

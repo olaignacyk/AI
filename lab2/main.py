@@ -2,7 +2,8 @@ from importlib import import_module
 from forward_planner import forward_search
 from astar_planner import astar_search
 from heuristics import num_unsatisfied_goals
-# 'problem1','problem2'
+
+
 problem_modules = [ 'problem1','problem2','problem3']
 
 for idx, mod_name in enumerate(problem_modules, 1):
@@ -27,6 +28,7 @@ for idx, mod_name in enumerate(problem_modules, 1):
         print(f"✅ Plan found ({len(plan)} actions):")
         for step in plan:
             print("  ", step)
+        
     else:
         print("❌ No plan found.")
     print("⏱ Time:", time_info)
