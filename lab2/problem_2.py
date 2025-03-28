@@ -33,21 +33,12 @@ for b in blocks:
                 'delete': [f'on({b}, {c})', 'hand_empty', f'clear({b})']
             })
 
-# Stan początkowy: wszystko luzem
+# ✔️ Początkowy stan: wszystko luzem
 initial = [f'on_table({b})' for b in blocks] + ['hand_empty'] + [f'clear({b})' for b in blocks]
 
-# Etap 1: dolna część
-goal1 = ['on(E, F)', 'on(D, E)']
-problem1_2 = Planning_problem(initial, goal1, domain)
+# 🎯 Cel: wieża A–B–C–D–E–F
+goal = [
+    'on(A, B)', 'on(B, C)', 'on(C, D)', 'on(D, E)', 'on(E, F)'
+]
 
-# Etap 2: środkowa część
-initial2 = initial + goal1  # zakładamy, że cel 1 już osiągnięty
-goal2 = ['on(C, D)', 'on(B, C)']
-problem2_2 = Planning_problem(initial2, goal2, domain)
-
-# Etap 3: górna część
-initial3 = initial2 + goal2
-goal3 = ['on(A, B)']
-problem3_2 = Planning_problem(initial3, goal3, domain)
-
-
+problem = Planning_problem(initial, goal, domain)

@@ -4,7 +4,7 @@ from astar_planner import astar_search
 from heuristics import num_unsatisfied_goals
 
 
-problem_modules = [ 'problem1','problem2','problem3']
+problem_modules = [ 'problem_1','problem_2','problem_3']
 
 for idx, mod_name in enumerate(problem_modules, 1):
     print(f"\n=== 🔍 Problem {idx} ===")

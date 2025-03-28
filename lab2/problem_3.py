@@ -7,7 +7,7 @@ locations = [f'L{i}' for i in range(1, 11)]
 robot = 'R1'
 containers = ['C1', 'C2']
 
-# Dodaj operatory move
+# Operatory move, load, unload
 for i in range(len(locations) - 1):
     l1 = locations[i]
     l2 = locations[i + 1]
@@ -24,7 +24,6 @@ for i in range(len(locations) - 1):
         'delete': [f'at({robot}, {l2})']
     })
 
-# Załadunek/rozładunek
 for c in containers:
     for l in locations:
         domain.add_operator({
@@ -40,20 +39,12 @@ for c in containers:
             'delete': [f'holding(R1, {c})']
         })
 
-# 🔹 Etap 1: załaduj C1 (znajduje się w L2)
-initial1 = ['at(R1, L1)', 'at(C1, L2)', 'at(C2, L3)', 'empty(R1)']
-goal1 = ['holding(R1, C1)']
-problem1_3 = Planning_problem(initial1, goal1, domain)
+# Początek: robot i oba kontenery w L1
+initial = [
+    'at(R1, L1)', 'at(C1, L1)', 'at(C2, L1)', 'empty(R1)'
+]
 
-# 🔹 Etap 2: przemieść C1 do L10
-initial2 = ['at(R1, L2)', 'holding(R1, C1)', 'at(C2, L3)', 'empty(R1)']  # zakładamy sukces etapu 1
-goal2 = ['at(C1, L10)']
-problem2_3 = Planning_problem(initial2, goal2, domain)
+# Cel: C1 na L10, C2 na L9 (wymusza podróże w tę i z powrotem)
+goal = ['at(C1, L10)', 'at(C2, L9)']
 
-# 🔹 Etap 3: dostarcz C2 do L9
-initial3 = ['at(R1, L3)', 'at(C2, L3)', 'empty(R1)', 'at(C1, L10)']
-goal3 = ['holding(R1, C2)', 'at(C2, L9)']
-problem3_3 = Planning_problem(initial3, goal3, domain)
-
-
-
+problem = Planning_problem(initial, goal, domain)
